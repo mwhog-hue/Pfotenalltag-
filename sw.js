@@ -1,7 +1,7 @@
 /* Pfotenalltag Service Worker – startet die App auch ohne Internet.
    Trainingsdaten, Tagebuch und Fotos liegen im lokalen Gerätespeicher, nicht in diesem Cache.
    Bei jeder neuen Version CACHE_VERSION erhöhen. */
-const CACHE_VERSION = 'pfotenalltag-2.1';
+const CACHE_VERSION = 'pfotenalltag-2.2';
 const DATEIEN = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 self.addEventListener('install', e=>{ e.waitUntil(caches.open(CACHE_VERSION).then(c=>c.addAll(DATEIEN)).then(()=>self.skipWaiting())); });
 self.addEventListener('activate', e=>{ e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==CACHE_VERSION).map(x=>caches.delete(x)))).then(()=>self.clients.claim())); });
