@@ -5,7 +5,9 @@
      Ohne Netz: die zuletzt geladene Fassung aus dem Offline-Speicher.
    • Übrige eigene Dateien (Icons, Manifest): sofort aus dem Offline-Speicher,
      im Hintergrund wird die aktuelle Fassung nachgeladen (für den nächsten Start).
-   • Beim ersten Start mit dieser Datei werden alte, versionsnummerierte Speicher gelöscht. */
+   • Beim ersten Start werden nur alte Speicher DIESER App gelöscht (gleiches Präfix).
+     Alle RH-Apps auf demselben GitHub-Pages-Konto teilen sich den Cache-Speicher –
+     fremde Caches bleiben deshalb unangetastet. */
 const CACHE = 'pfotenalltag';
 const CORE = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./apple-touch-icon.png"];
 
@@ -17,7 +19,7 @@ self.addEventListener('install', e => {
 
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys()
-    .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+    .then(keys => Promise.all(keys.filter(k => k.startsWith(CACHE) && k !== CACHE).map(k => caches.delete(k))))
     .then(() => self.clients.claim()));
 });
 
@@ -37,14 +39,14 @@ self.addEventListener('fetch', e => {
     e.respondWith(
       fetch(req, { cache: 'no-cache' })
         .then(r => speichern(req, r))
-        .catch(() => caches.match(req, { ignoreSearch: true })
-          .then(m => m || caches.match('./index.html'))
-          .then(m => m || caches.match('./')))
+        .catch(() => caches.open(CACHE).then(c => c.match(req, { ignoreSearch: true }))
+          .then(m => m || caches.open(CACHE).then(c => c.match('./index.html')))
+          .then(m => m || caches.open(CACHE).then(c => c.match('./'))))
     );
     return;
   }
 
-  e.respondWith(caches.match(req).then(m => {
+  e.respondWith(caches.open(CACHE).then(c => c.match(req)).then(m => {
     const netz = fetch(req, { cache: 'no-cache' }).then(r => speichern(req, r)).catch(() => m);
     if (m) { e.waitUntil(netz); return m; }
     return netz;
