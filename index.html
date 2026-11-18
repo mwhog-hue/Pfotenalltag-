@@ -265,7 +265,7 @@ main,.app,#content{max-width:var(--ux-content-max);margin-left:auto;margin-right
 <details class="ux-help-details" id="kurzanleitung"><summary>So finden Sie sich zurecht</summary>
 <ul class="kurzanleitung">
 <li><b>🏠 Heute</b> – Tagesvorschlag, Ihre Trainingsserie und „Heute im Napf“.</li>
-<li><b>🎯 Training</b> – Einheit mit 3 bis 8 Übungen erstellen, bewerten und kommentieren.</li>
+<li><b>🎯 Training</b> – Einheit mit 3 bis 8 Übungen erstellen, bewerten und kommentieren; ganz oben lost das <b>🎡 Glücksrad</b> eine einzelne Übung aus.</li>
 <li><b>📚 Übungen</b> – alle Übungen mit Aufbau in Stufen, durchsuchbar.</li>
 <li><b>🎒 Abenteuer</b> – Spaziergang mit kleinen Entdeckungsstationen; <b>🧩 Beschäftigung drinnen</b> für Regentage und Schonzeiten.</li>
 <li><b>🎓 Begleithund-Prüfung</b> – Aufbau für FCI-BH/VT und IBgH oder als Alltagsziel ohne Prüfung, mit Ampel und Probe-Punktebogen; <b>🎡 Glücksrad</b> lost eine Übung aus.</li>
@@ -392,6 +392,7 @@ main,.app,#content{max-width:var(--ux-content-max);margin-left:auto;margin-right
 </section>
 <section class="app-page" data-app-page="training" hidden="">
 <div class="section-title" id="heutigeEinheitSection">TRAINING ERSTELLEN</div>
+<section class="panel" style="margin-bottom:14px"><details id="grBox"><summary>🎡 Glücksrad – eine Übung auslosen</summary><p class="hint" style="margin:8px 0">Wählen Sie die Bereiche, aus denen das Rad eine Übung ziehen soll. Rad antippen oder „Drehen“ – das Ergebnis öffnet die Übung mit allen Schritten.</p><div class="gr-wrap"><div class="gr-zeiger"></div><canvas id="grCanvas" width="600" height="600" aria-label="Glücksrad"></canvas></div><div style="text-align:center"><button type="button" class="tool-btn primary" id="grDrehBtn">🎡 Drehen</button></div><div id="grErgebnis"></div><details style="margin-top:10px"><summary class="micro">Bereiche auswählen</summary><div class="pg-chips" id="grChips"></div></details></details></section>
 <section class="panel">
 <p class="hint"><strong>Automatischer Tagesvorschlag:</strong> Wählen Sie einen Schwerpunkt und drei bis acht Übungen. Die App berücksichtigt die eingestellten Ausbildungsstufen und stellt daraus eine abwechslungsreiche Einheit zusammen.</p>
 <div class="controls"><select aria-label="Trainingsfokus" class="control" id="focusSelect"></select><select aria-label="Anzahl Übungen" class="control" id="sessionSize"><option value="3">3 Übungen</option><option value="4">4 Übungen</option><option selected="" value="6">6 Übungen</option><option value="8">8 Übungen</option></select></div>
@@ -400,7 +401,6 @@ main,.app,#content{max-width:var(--ux-content-max);margin-left:auto;margin-right
 <div class="session" id="sessionArea"></div>
 </section>
 <section class="app-page" data-app-page="uebungen" hidden="">
-<section class="panel" style="margin-bottom:14px"><details id="grBox"><summary>🎡 Glücksrad – eine Übung auslosen</summary><p class="hint" style="margin:8px 0">Wählen Sie die Bereiche, aus denen das Rad eine Übung ziehen soll. Rad antippen oder „Drehen“ – das Ergebnis öffnet die Übung mit allen Schritten.</p><div class="gr-wrap"><div class="gr-zeiger"></div><canvas id="grCanvas" width="600" height="600" aria-label="Glücksrad"></canvas></div><div style="text-align:center"><button type="button" class="tool-btn primary" id="grDrehBtn">🎡 Drehen</button></div><div id="grErgebnis"></div><details style="margin-top:10px"><summary class="micro">Bereiche auswählen</summary><div class="pg-chips" id="grChips"></div></details></details></section>
 <div class="section-title">AUFBAUÜBUNGEN AUS DEM TRAININGSKALENDER</div>
 <section class="panel">
 <p class="hint"><strong>So nutzt du jede Stufe:</strong> Aufbau sichern, 2–5 ruhige Wiederholungen; erst bei etwa 4 von 5 sicheren Versuchen steigern. Immer nur Dauer, Distanz, Ablenkung oder Untergrund verändern – bei Unsicherheit eine Stufe zurück.</p>
@@ -1612,7 +1612,7 @@ function bhInit(){const tabs=$('bhTabs');if(!tabs)return;
  $('bhPunkte').querySelectorAll('input').forEach(i=>i.addEventListener('input',bhPunkte));
  $('bhPunkteReset').onclick=()=>{$('bhPunkte').querySelectorAll('.bh-p').forEach(i=>i.value='');$('bhPunkte').querySelectorAll('.bh-b').forEach(i=>i.checked=false);bhPunkte()};
  document.querySelectorAll('[data-goto="begleithund"]').forEach(x=>x.addEventListener('click',bhRender));
- document.querySelectorAll('[data-goto="gluecksrad"]').forEach(x=>x.onclick=()=>{showPage('uebungen');const d=$('grBox');if(d){d.open=true;grInit();setTimeout(()=>d.scrollIntoView({behavior:'smooth',block:'start'}),80)}});
+ document.querySelectorAll('[data-goto="gluecksrad"]').forEach(x=>x.onclick=()=>{showPage('training');const d=$('grBox');if(d){d.open=true;grInit();setTimeout(()=>d.scrollIntoView({behavior:'smooth',block:'start'}),80)}});
  window.addEventListener('hashchange',()=>{if((location.hash||'').includes('begleithund'))bhRender()});if((location.hash||'').includes('begleithund'))bhRender()}
 
 (async()=>{await loadState();renderAll();initNavigation();try{pfPlusInit()}catch(e){console.error('Pfotenalltag 2.0:',e)}try{initAdventure()}catch(e){console.error('Abenteuer:',e)}try{pgInit()}catch(e){console.error('Gesundheit:',e)}})();
